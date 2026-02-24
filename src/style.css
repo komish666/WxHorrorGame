@@ -1,0 +1,35 @@
+/* src/style.css */
+
+/* 1. 全局样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* 防止在主页面上出现滚动条 */
+}
+
+/* 2. 为body设置全局字体和背景 */
+body {
+  /* 这是模拟手机周围的深色背景 */
+  background-color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 这是模拟iOS/微信的默认字体，让界面更逼真 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* 3. 为滚动条添加一点样式，使其不那么突兀 */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 5px;
+}

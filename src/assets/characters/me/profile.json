@@ -1,0 +1,26 @@
+{
+  "id": "me",
+  "name": "我",
+  "avatar": "/src/assets/characters/me/avatar.png",
+  "description": "一个正在逐渐失去人性的怪物。",
+  "memoryClues": [
+    {
+      "id": "clue_1",
+      "title": "记忆碎片1",
+      "content": "我记得我曾经是一个人，有家庭，有朋友，有爱人。",
+      "sanRequirement": 15
+    },
+    {
+      "id": "clue_2",
+      "title": "记忆碎片2",
+      "content": "我的身体在变化，我的思维在扭曲。我开始渴望...血液。",
+      "sanRequirement": 10
+    },
+    {
+      "id": "clue_3",
+      "title": "记忆碎片3",
+      "content": "但是我不想伤害他们，我不想失去最后的人性。",
+      "sanRequirement": 5
+    }
+  ]
+}

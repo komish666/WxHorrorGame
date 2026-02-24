@@ -1,0 +1,36 @@
+/* src/assets/base.css */
+:root {
+    --bg-color: #ededed;
+    --primary-bg: #fff;
+    --text-primary: #000;
+    --text-secondary: #888;
+    --accent-color: #07c160;
+    --divider-color: #e0e0e0;
+    --notification-bg: #fa5151;
+    --my-bubble-color: #95ec69;
+    --other-bubble-color: #fff;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent; /* 移除移动端点击高亮 */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 模拟手机容器 */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--primary-bg);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
