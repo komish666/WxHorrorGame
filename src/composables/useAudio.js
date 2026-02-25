@@ -7,24 +7,54 @@ const bgmAudio = ref(null);
 const messageSendAudio = ref(null);
 const keyboardAudio = ref(null);
 const isBgmPlaying = ref(false);
-let previousSanValue = 100;
+
+// Web Audio API 相关变量
+let audioCtx = null;
+let source = null;
+let filter = null;
+let panner = null;
+let gainNode = null;
+let isAudioContextInitialized = false;
 
 const initAudio = () => {
+  // 初始化原始 Audio 对象
   bgmAudio.value = new Audio(bgmAudioFile);
   bgmAudio.value.loop = true;
   bgmAudio.value.volume = 0.5;
-  
+  bgmAudio.value.crossOrigin = "anonymous"; // 防止跨域导致的 API 无法控制
+
   messageSendAudio.value = new Audio(messageSendAudioFile);
   messageSendAudio.value.volume = 0.5;
-  
+
   keyboardAudio.value = new Audio(keyboardAudioFile);
   keyboardAudio.value.volume = 0.3;
-  
+
   bgmAudio.value.addEventListener('ended', () => {
     if (isBgmPlaying.value) {
       bgmAudio.value.play().catch(() => {});
     }
   });
+};
+
+// 初始化 Web Audio 节点链
+const initWebAudioContext = () => {
+  if (isAudioContextInitialized) return;
+  
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // 将原有的 bgmAudio 接入 Web Audio API
+  source = audioCtx.createMediaElementSource(bgmAudio.value);
+  
+  filter = audioCtx.createBiquadFilter();
+  panner = audioCtx.createStereoPanner();
+  gainNode = audioCtx.createGain();
+
+  // 链接节点: Source -> Filter -> Panner -> Gain -> Destination
+  source.connect(filter);
+  filter.connect(panner);
+  panner.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  isAudioContextInitialized = true;
 };
 
 const playMessageSendSound = () => {
@@ -43,8 +73,16 @@ const playKeyboardSound = () => {
 
 const startBgm = () => {
   if (bgmAudio.value && !isBgmPlaying.value) {
+    // 首次播放时初始化上下文
+    initWebAudioContext();
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
     isBgmPlaying.value = true;
     bgmAudio.value.play().catch(() => {});
+    
+    // 启动持续刷新扭曲效果的循环（解决 Math.sin 需要随时间变化的问题）
+    requestAnimationFrame(applyContinuousEffects);
   }
 };
 
@@ -55,34 +93,53 @@ const stopBgm = () => {
   }
 };
 
+// 存储当前的 SAN 值，供循环调用
+let currentSanValue = 100;
+
 const updateBgmBasedOnSan = (sanValue) => {
-  if (!bgmAudio.value) return;
+  currentSanValue = sanValue;
+};
 
-  // 将 SAN 值从 [0, 100] 映射到 [1, 0] 的不安感强度（intensity）
-  const intensity = 1 - (sanValue / 100); // sanValue 为 0 时，intensity 为 1；sanValue 为 100 时，intensity 为 0
+// 持续应用扭曲效果的逻辑（加重扭曲感的核心）
+const applyContinuousEffects = () => {
+  if (!isBgmPlaying.value || !isAudioContextInitialized) return;
 
-  // 1. 播放速率 (Playback Rate) - 核心扭曲感来源
-  // 使用平方 (Math.pow(intensity, 2)) 让低 SAN 值的影响更剧烈
-  // 正常 SAN 值 (intensity=0)，速率为 1.0 (正常)
-  // 极低 SAN 值 (intensity=1)，速率为 0.2 (非常慢，扭曲)
-  const playbackRate = 1.0 - (0.8 * Math.pow(intensity, 1.5)); // 范围从 1.0 降低到 0.2
-  bgmAudio.value.playbackRate = playbackRate;
+  const intensity = 1 - (currentSanValue / 100);
+  const now = audioCtx.currentTime;
 
-  // 2. 音量 (Volume) - 忽大忽小的感觉
-  // 让音量在 SAN 值降低时不是一直变小，而是在一个范围内波动，或者只在极低时才减弱
-  // 这里我们让它在 SAN 值低时反而稍微变响一点，模拟紧张感，但在最低时又减弱，模拟失聪感
-  let volume;
-  if (sanValue > 30) {
-    volume = 0.5; // 正常状态
+  // 1. 极度扭曲的播放速率 (Playback Rate)
+  // 加入 Wow/Flutter (音准不稳) 效果
+  const baseRate = 1.0 - (0.7 * Math.pow(intensity, 1.5)); // 基础降速
+  const wobble = intensity > 0.3 ? Math.sin(Date.now() / 200) * 0.08 * intensity : 0;
+  bgmAudio.value.playbackRate = Math.max(0.1, baseRate + wobble);
+
+  // 2. 频谱过滤 (Filter) - 营造压抑感
+  // SAN值越低，声音越闷，就像溺水或耳鸣
+  const cutOffFreq = 20000 * Math.pow(1 - intensity, 2) + 100;
+  filter.frequency.setTargetAtTime(cutOffFreq, now, 0.1);
+
+  // 3. 空间摇摆 (Panning) - 营造眩晕感
+  // 低于 50 SAN，声音开始在左右耳之间缓慢无规律平移
+  if (intensity > 0.5) {
+    const panValue = Math.sin(Date.now() / 800) * intensity;
+    panner.pan.setTargetAtTime(panValue, now, 0.1);
   } else {
-    // 模拟心跳或紧张感，音量在 0.4 到 0.7 之间抖动
-    // 这里的 Math.sin 可以制造一种周期性的波动感，让玩家不安
-    const volumeFluctuation = Math.sin(Date.now() / 500) * 0.15; // 每半秒波动一次，范围 -0.15 到 +0.15
-    volume = 0.55 + volumeFluctuation; // 基础音量 0.55，波动后为 [0.4, 0.7]
+    panner.pan.setTargetAtTime(0, now, 0.1);
   }
-  bgmAudio.value.volume = Math.max(0.1, Math.min(volume, 0.8)); // 限制音量在安全范围
 
-  console.log('BGM updated:', { sanValue, intensity, playbackRate, volume: bgmAudio.value.volume });
+  // 4. 音量波动与瞬间失聪感
+  let targetVolume = 0.6;
+  if (intensity > 0.7) {
+    // 模拟心脏跳动的音量起伏
+    const heartBeat = Math.sin(Date.now() / 150) * 0.2 * intensity;
+    // 随机的断片/干扰感
+    const noise = Math.random() > 0.98 ? 0.1 : 1.0;
+    targetVolume = (0.5 + heartBeat) * noise;
+  }
+  gainNode.gain.setTargetAtTime(targetVolume, now, 0.1);
+
+  // 继续循环
+  requestAnimationFrame(applyContinuousEffects);
 };
 
 export function useAudio() {

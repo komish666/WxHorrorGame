@@ -197,6 +197,15 @@ watch(history, (newHistory) => {
   }
   previousHistoryLength = newHistory.length;
 }, { deep: true });
+
+// 监听选项面板显示状态，自动滚动到底部
+watch(() => gameStore.isWaitingForChoice, (isWaiting) => {
+  nextTick(() => {
+    if (messageList.value) {
+      messageList.value.scrollTop = messageList.value.scrollHeight;
+    }
+  });
+});
 </script>
 
 <style scoped>
@@ -292,6 +301,8 @@ watch(history, (newHistory) => {
   border-top: 1px solid #E5E5E5;
   flex-shrink: 0;
   box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+  max-height: 30vh;
+  overflow-y: auto;
 }
 
 /* 震动效果 */
