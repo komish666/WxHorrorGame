@@ -62,13 +62,6 @@ import haimingProfile from '../assets/characters/haiming/profile.json';
 import motherProfile from '../assets/characters/mother/profile.json';
 import meProfile from '../assets/characters/me/profile.json';
 
-// 导入角色头像
-import girlfriendAvatar from '../assets/characters/girlfriend/avatar.png';
-import meAvatar from '../assets/characters/me/avatar.png';
-import strangerAvatar from '../assets/characters/stranger/avatar.png';
-import haimingAvatar from '../assets/characters/haiming/avatar.png';
-import motherAvatar from '../assets/characters/mother/avatar.png';
-
 // 导入你的组件
 import ChatBubble from '../components/ChatBubble.vue';
 import SystemMessage from '../components/SystemMessage.vue';
@@ -125,11 +118,11 @@ const history = computed(() => {
 });
 
 const profiles = ref({
-  '女友': { name: '女友', avatar: girlfriendAvatar },
-  '陌生人': { name: '陌生人', avatar: strangerAvatar },
-  '海明': { name: '海明', avatar: haimingAvatar },
-  '母亲': { name: '母亲', avatar: motherAvatar },
-  '我': { name: '我', avatar: meAvatar }
+  '女友': { name: '女友', avatar: new URL('../assets/characters/girlfriend/avatar.png', import.meta.url).href },
+  '陌生人': { name: '陌生人', avatar: new URL('../assets/characters/stranger/avatar.png', import.meta.url).href },
+  '海明': { name: '海明', avatar: new URL('../assets/characters/haiming/avatar.png', import.meta.url).href },
+  '母亲': { name: '母亲', avatar: new URL('../assets/characters/mother/avatar.png', import.meta.url).href },
+  '我': { name: '我', avatar: new URL('../assets/characters/me/avatar.png', import.meta.url).href }
 });
 
 onMounted(() => {
