@@ -49,13 +49,11 @@ import TabBar from '../components/TabBar.vue';
 // 导入角色profile
 import girlfriendProfile from '../assets/characters/girlfriend/profile.json';
 
+// 导入角色头像
+import girlfriendAvatar from '../assets/characters/girlfriend/avatar.png';
+
 // 导入你的组件
 import TabBar from '../components/TabBar.vue';
-
-// 动态获取图片URL的函数
-const getImageUrl = (name) => {
-  return new URL(`./assets/${name}`, import.meta.url).href;
-};
 const gameStore = useGameStore();
 
 // 角色配置 - 只保留女友
@@ -63,7 +61,7 @@ const characters = ref([
   {
     id: 'girlfriend',
     name: '女友',
-    avatar: getImageUrl('characters/girlfriend/avatar.png')
+    avatar: girlfriendAvatar
   }
 ]);
 
