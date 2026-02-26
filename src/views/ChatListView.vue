@@ -49,8 +49,8 @@ import TabBar from '../components/TabBar.vue';
 // 导入角色profile
 import girlfriendProfile from '../assets/characters/girlfriend/profile.json';
 
-// 导入工具函数
-import { getAssetUrl } from '../utils/helpers';
+// 导入角色头像
+import girlfriendAvatar from '../assets/characters/girlfriend/avatar.png';
 
 const router = useRouter();
 const gameStore = useGameStore();
@@ -60,7 +60,7 @@ const characters = ref([
   {
     id: 'girlfriend',
     name: '女友',
-    avatar: getAssetUrl('characters/girlfriend/avatar.png')
+    avatar: girlfriendAvatar
   }
 ]);
 
