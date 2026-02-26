@@ -49,6 +49,9 @@ import TabBar from '../components/TabBar.vue';
 // 导入角色profile
 import girlfriendProfile from '../assets/characters/girlfriend/profile.json';
 
+// 导入工具函数
+import { getAssetUrl } from '../utils/helpers';
+
 const router = useRouter();
 const gameStore = useGameStore();
 
@@ -57,7 +60,7 @@ const characters = ref([
   {
     id: 'girlfriend',
     name: '女友',
-    avatar: girlfriendProfile.avatar
+    avatar: getAssetUrl('characters/girlfriend/avatar.png')
   }
 ]);
 

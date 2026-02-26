@@ -54,6 +54,6 @@ export function getRandomInt(min, max) {
 export function getAssetUrl(path) {
     // 这是一个 Vite 特定的辅助函数，用于在JS中正确引用assets下的资源
     // 示例用法: getAssetUrl('characters/girlfriend/avatar.png')
-    return new URL(`/src/assets/${path}`, import.meta.url).href;
+    return new URL(`./assets/${path}`, import.meta.url).href;
 }
 

@@ -62,6 +62,9 @@ import haimingProfile from '../assets/characters/haiming/profile.json';
 import motherProfile from '../assets/characters/mother/profile.json';
 import meProfile from '../assets/characters/me/profile.json';
 
+// 导入工具函数
+import { getAssetUrl } from '../utils/helpers';
+
 // 导入你的组件
 import ChatBubble from '../components/ChatBubble.vue';
 import SystemMessage from '../components/SystemMessage.vue';
@@ -118,11 +121,11 @@ const history = computed(() => {
 });
 
 const profiles = ref({
-  '女友': { name: '女友', avatar: girlfriendProfile.avatar },
-  '陌生人': { name: '陌生人', avatar: strangerProfile.avatar },
-  '海明': { name: '海明', avatar: haimingProfile.avatar },
-  '母亲': { name: '母亲', avatar: motherProfile.avatar },
-  '我': { name: '我', avatar: meProfile.avatar }
+  '女友': { name: '女友', avatar: getAssetUrl('characters/girlfriend/avatar.png') },
+  '陌生人': { name: '陌生人', avatar: getAssetUrl('characters/stranger/avatar.png') },
+  '海明': { name: '海明', avatar: getAssetUrl('characters/haiming/avatar.png') },
+  '母亲': { name: '母亲', avatar: getAssetUrl('characters/mother/avatar.png') },
+  '我': { name: '我', avatar: getAssetUrl('characters/me/avatar.png') }
 });
 
 onMounted(() => {
