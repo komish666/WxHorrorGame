@@ -118,11 +118,11 @@ const history = computed(() => {
 });
 
 const profiles = ref({
-  '女友': { name: '女友', avatar: new URL('../assets/characters/girlfriend/avatar.png', import.meta.url).href },
-  '陌生人': { name: '陌生人', avatar: new URL('../assets/characters/stranger/avatar.png', import.meta.url).href },
-  '海明': { name: '海明', avatar: new URL('../assets/characters/haiming/avatar.png', import.meta.url).href },
-  '母亲': { name: '母亲', avatar: new URL('../assets/characters/mother/avatar.png', import.meta.url).href },
-  '我': { name: '我', avatar: new URL('../assets/characters/me/avatar.png', import.meta.url).href }
+  '女友': { name: '女友', avatar: '/characters/girlfriend/avatar.png' },
+  '陌生人': { name: '陌生人', avatar: '/characters/stranger/avatar.png' },
+  '海明': { name: '海明', avatar: '/characters/haiming/avatar.png' },
+  '母亲': { name: '母亲', avatar: '/characters/mother/avatar.png' },
+  '我': { name: '我', avatar: '/characters/me/avatar.png' }
 });
 
 onMounted(() => {

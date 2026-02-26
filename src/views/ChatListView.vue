@@ -49,7 +49,7 @@ import TabBar from '../components/TabBar.vue';
 // 导入角色profile
 import girlfriendProfile from '../assets/characters/girlfriend/profile.json';
 
-const router = useRouter();
+const router = useRouter(); // 必须要定义router变量
 const gameStore = useGameStore();
 
 // 角色配置 - 只保留女友
@@ -57,8 +57,8 @@ const characters = ref([
   {
     id: 'girlfriend',
     name: '女友',
-    // 使用 new URL 动态获取路径，确保在打包后依然能找到文件
-    avatar: new URL('../assets/characters/girlfriend/avatar.png', import.meta.url).href
+    // 注意：前面带 /，代表 public 根目录
+    avatar: '/characters/girlfriend/avatar.png'
   }
 ]);
 
